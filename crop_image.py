@@ -32,21 +32,21 @@ def normalize(im):
 # load the image and show it
 image = cv2.imread("img/scan_score.jpg")
 
-cropped_1 = image[1292:2072, 599:1006].copy()
+cropped_1 = image[2222:2837, 599:1006].copy()
 crop_1 = True
-cropped_2 = image[1292:2072, 1147:1549].copy()
-
-cropped_3 = image[1303:1363, 599:1006]
+# cropped_2 = image[1292:2072, 1147:1549].copy()
+#
+# cropped_3 = image[1303:1363, 599:1006]
 crop_2 = False
 # cv2.imshow("cropped", cropped_1)
 
-edges = cv2.Canny(cropped_2, 100, 200)
+edges = cv2.Canny(cropped_1, 100, 200)
 
 blurred = cv2.GaussianBlur(cropped_1, (11, 11), 10)
 # crop_1 = True
 im = normalize(cv2.cvtColor(blurred, cv2.COLOR_BGR2GRAY))
 
-ret, im = cv2.threshold(im, 150, 255, cv2.THRESH_BINARY)
+ret, im = cv2.threshold(im, 130, 255, cv2.THRESH_BINARY)
 
 thresh = cv2.threshold(im, 0, 255,cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
 
@@ -64,7 +64,8 @@ count = 0
 for i in stats:
     cv2.putText(cropped_1, str(count), (i[0], i[1] + i[3]), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 2, 255)
 
-    if i[4]>=2550 and i[4]<= 2900:
+    if i[4]>=2350 and i[4]<= 2900:
+        print(count, i)
         answers.append(i)
 
         counts.append(count)
@@ -81,42 +82,50 @@ a = []
 for i in range(len(answers)):
     if crop_1:
         if i % 2 == 0:
-            if answers[i][0]>=235 and answers[i][0]<= 240:
+            if answers[i][0]>=230 and answers[i][0]<= 245:
                 a.append('D')
-            elif answers[i][0]>=3 and answers[i][0]<= 6:
+            elif answers[i][0]>=2 and answers[i][0]<= 8:
                 a.append('A')
-            elif answers[i][0]>=80 and answers[i][0]<= 84:
+            elif answers[i][0]>=78 and answers[i][0]<= 86:
                 a.append('B')
-            elif answers[i][0]>=159 and answers[i][0]<= 165:
+            elif answers[i][0]>=155 and answers[i][0]<= 165:
                 a.append('C')
+            elif answers[i][0] >= 318 and answers[i][0] <= 330:
+                a.append('E')
         else:
-            if answers[i][0]>=235 and answers[i][0]<= 240:
+            if answers[i][0]>=230 and answers[i][0]<= 245:
                 a.append('J')
-            elif answers[i][0]>=3 and answers[i][0]<= 6:
+            elif answers[i][0]>=2 and answers[i][0]<= 8:
                 a.append('F')
-            elif answers[i][0]>=80 and answers[i][0]<= 84:
+            elif answers[i][0]>=78 and answers[i][0]<= 86:
                 a.append('G')
-            elif answers[i][0]>=159 and answers[i][0]<= 165:
+            elif answers[i][0]>=155 and answers[i][0]<= 165:
                 a.append('H')
+            elif answers[i][0] >= 318 and answers[i][0] <= 330:
+                a.append('K')
     elif crop_2:
         if i % 2 == 0:
-            if answers[i][0]>=235 and answers[i][0]<= 240:
+            if answers[i][0]>=230 and answers[i][0]<= 245:
                 a.append('J')
-            elif answers[i][0]>=3 and answers[i][0]<= 6:
+            elif answers[i][0]>=2 and answers[i][0]<= 8:
                 a.append('F')
-            elif answers[i][0]>=80 and answers[i][0]<= 84:
+            elif answers[i][0]>=78 and answers[i][0]<= 86:
                 a.append('G')
-            elif answers[i][0]>=159 and answers[i][0]<= 165:
+            elif answers[i][0]>=155 and answers[i][0]<= 165:
                 a.append(('H'))
+            elif answers[i][0] >= 318 and answers[i][0] <= 330:
+                a.append('K')
         else:
-            if answers[i][0]>=235 and answers[i][0]<= 240:
+            if answers[i][0]>=230 and answers[i][0]<= 245:
                 a.append('D')
-            elif answers[i][0]>=3 and answers[i][0]<= 6:
+            elif answers[i][0]>=2 and answers[i][0]<= 8:
                 a.append('A')
-            elif answers[i][0]>=80 and answers[i][0]<= 84:
+            elif answers[i][0]>=78 and answers[i][0]<= 86:
                 a.append('B')
-            elif answers[i][0]>=159 and answers[i][0]<= 165:
+            elif answers[i][0]>=155 and answers[i][0]<= 165:
                 a.append('C')
+            elif answers[i][0] >= 318 and answers[i][0] <= 330:
+                a.append('E')
 
 print(a)
 

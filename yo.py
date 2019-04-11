@@ -16,6 +16,140 @@ import cv2
 def normalize(im):
     return cv2.normalize(im, np.zeros(im.shape), 0, 255, norm_type=cv2.NORM_MINMAX)
 
+def CvPy_2(image, even, odd):
+    edges = cv2.Canny(image, 100, 200)
+
+    blurred = cv2.GaussianBlur(image, (11, 11), 10)
+    # crop_1 = True
+    im = normalize(cv2.cvtColor(blurred, cv2.COLOR_BGR2GRAY))
+
+    ret, im = cv2.threshold(im, 130, 255, cv2.THRESH_BINARY)
+
+    thresh = cv2.threshold(im, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+
+    # thresh = cv2.bitwise_not(thresh)
+
+    output = cv2.connectedComponentsWithStats(thresh, 4, cv2.CV_32S)
+
+    stats = output[2]
+    labels = output[1]
+
+    answers = []
+    counts = []
+    comp_list = []
+    comp = []
+    count = 1
+    double = []
+
+    for i in stats:
+
+        if i[4] <= 3200:
+            cv2.putText(image, str(count), (i[0], i[1] + i[3]), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 2, 255)
+            # answers.append(i)
+            comp_list.append(i)
+            if count % 5 == 0:
+                comp.append(comp_list)
+                empty = True
+                check_double = False
+                for c in comp_list:
+                    if c[4] >= 2350 and c[4] <= 3200:
+                        answers.append(c)
+                        double.append(c)
+                        # print(count, c)
+                        empty = False
+                print(double)
+                if len(double) == 2 or empty == True:
+                    answers.append([0])
+                    check_double = True
+
+                double = []
+                comp_list = []
+            counts.append(count)
+            count += 1
+
+    # for i in stats:
+    #     cv2.putText(image, str(count), (i[0], i[1] + i[3]), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 2, 255)
+    #
+    #     if i[4] >= 2350 and i[4] <= 2900:
+    #         print(count, i)
+    #         answers.append(i)
+    #
+    #         counts.append(count)
+    #         count += 1
+    #     else:
+    #         count += 1
+
+    # print(counts)
+
+    # for a in answers:
+    #     print(a)
+
+    a = []
+    for i in range(len(answers)):
+        if odd:
+            if i % 2 == 0:
+                if answers[i][0] >= 230 and answers[i][0] <= 245:
+                    a.append('D')
+                elif answers[i][0] >= 2 and answers[i][0] <= 8:
+                    a.append('A')
+                elif answers[i][0] >= 78 and answers[i][0] <= 86:
+                    a.append('B')
+                elif answers[i][0] >= 155 and answers[i][0] <= 165:
+                    a.append('C')
+                elif answers[i][0] >= 318 and answers[i][0] <= 330:
+                    a.append('E')
+                elif answers[i][0] == 0:
+                    a.append('_')
+            else:
+                if answers[i][0] >= 230 and answers[i][0] <= 245:
+                    a.append('J')
+                elif answers[i][0] >= 2 and answers[i][0] <= 8:
+                    a.append('F')
+                elif answers[i][0] >= 78 and answers[i][0] <= 86:
+                    a.append('G')
+                elif answers[i][0] >= 155 and answers[i][0] <= 165:
+                    a.append('H')
+                elif answers[i][0] >= 318 and answers[i][0] <= 330:
+                    a.append('K')
+                elif answers[i][0] == 0:
+                    a.append('_')
+
+        elif even:
+            if i % 2 == 0:
+                if answers[i][0] >= 230 and answers[i][0] <= 245:
+                    a.append('J')
+                elif answers[i][0] >= 2 and answers[i][0] <= 8:
+                    a.append('F')
+                elif answers[i][0] >= 78 and answers[i][0] <= 86:
+                    a.append('G')
+                elif answers[i][0] >= 155 and answers[i][0] <= 165:
+                    a.append(('H'))
+                elif answers[i][0] >= 318 and answers[i][0] <= 330:
+                    a.append('K')
+                elif answers[i][0] == 0:
+                    a.append('_')
+
+            else:
+                if answers[i][0] >= 230 and answers[i][0] <= 245:
+                    a.append('D')
+                elif answers[i][0] >= 2 and answers[i][0] <= 8:
+                    a.append('A')
+                elif answers[i][0] >= 78 and answers[i][0] <= 86:
+                    a.append('B')
+                elif answers[i][0] >= 155 and answers[i][0] <= 165:
+                    a.append('C')
+                elif answers[i][0] >= 318 and answers[i][0] <= 330:
+                    a.append('E')
+                elif answers[i][0] == 0:
+                    a.append('_')
+
+    cv2.imshow("original", image)
+    # cv2.imshow("img", im)
+    cv2.imshow("th", thresh)
+    cv2.waitKey(0)
+
+    return a
+
 def CvPy(image, even, odd):
     edges = cv2.Canny(image, 100, 200)
 
@@ -38,6 +172,7 @@ def CvPy(image, even, odd):
     counts = []
     comp_list = []
     comp = []
+    double = []
     count = 1
 
     for i in stats:
@@ -49,14 +184,20 @@ def CvPy(image, even, odd):
             comp_list.append(i)
             if count%4 == 0:
                 comp.append(comp_list)
-                flag = False
+                empty = True
+                check_double = False
                 for c in comp_list:
-                    if c[4] >= 2550 and c[4] <= 3200:
+                    if c[4] >= 2350 and c[4] <= 3200:
                         answers.append(c)
-                        flag = True
-
-                if flag == False:
+                        double.append(c)
+                        # print(count, c)
+                        empty = False
+                print(double)
+                if len(double) == 2 or empty == True:
                     answers.append([0])
+                    check_double = True
+
+                double = []
                 comp_list = []
             counts.append(count)
             count += 1
@@ -68,7 +209,7 @@ def CvPy(image, even, odd):
     cv2.imshow("original", image)
     # cv2.imshow("img", im)
     cv2.imshow("th", thresh)
-    # cv2.waitKey(0)
+    cv2.waitKey(0)
 
     # for a in answers:
     #     print(a)
@@ -85,8 +226,8 @@ def CvPy(image, even, odd):
                     a.append('B')
                 elif answers[i][0] >= 155 and answers[i][0] <= 165:
                     a.append('C')
-                elif answers[i] == 0:
-                    a.append('Not attempted')
+                elif answers[i][0] == 0:
+                    a.append('_')
             else:
                 if answers[i][0] >= 230 and answers[i][0] <= 245:
                     a.append('J')
@@ -96,8 +237,8 @@ def CvPy(image, even, odd):
                     a.append('G')
                 elif answers[i][0] >= 155 and answers[i][0] <= 165:
                     a.append('H')
-                elif answers[i] == 0:
-                    a.append('Not attempted')
+                elif answers[i][0] == 0:
+                    a.append('_')
         elif even:
             if i % 2 == 0:
                 if answers[i][0] >= 230 and answers[i][0] <= 240:
@@ -108,8 +249,8 @@ def CvPy(image, even, odd):
                     a.append('G')
                 elif answers[i][0] >= 155 and answers[i][0] <= 165:
                     a.append('H')
-                elif answers[i] == 0:
-                    a.append('Not attempted')
+                elif answers[i][0] == 0:
+                    a.append('_')
             else:
                 if answers[i][0] >= 230 and answers[i][0] <= 245:
                     a.append('D')
@@ -119,15 +260,16 @@ def CvPy(image, even, odd):
                     a.append('B')
                 elif answers[i][0] >= 155 and answers[i][0] <= 165:
                     a.append('C')
-                elif answers[i] == 0:
-                    a.append('Not attempted')
+                elif answers[i][0] == 0:
+                    a.append('_')
 
     return a
 
 
 def main():
     test_1_list = []
-    answers = {}
+    test_2_list = []
+
     # load the image and show it
     image = cv2.imread("img/scan_score.jpg")
 
@@ -144,8 +286,21 @@ def main():
     # cropped_6 = image[1292:2072, 3338:3737].copy()
     # test_1_list.append(CvPy(cropped_6, True, False))
 
-    test_dict ={ }
+    # cropped_1 = image[2222:2837, 599:1006].copy()
+    # test_2_list.append(CvPy_2(cropped_1, False, True))
+    # cropped_2 = image[2222:2837, 1147:1549].copy()
+    # test_2_list.append(CvPy(cropped_2, True, False))
+    # cropped_3 = image[2222:2837, 1693:2095].copy()
+    # test_2_list.append(CvPy(cropped_3, False, True))
+    # cropped_4 = image[2222:2837, 2242:2642].copy()
+    # test_2_list.append(CvPy(cropped_4, True, False))
+    # cropped_5 = image[2222:2837, 2788:3196].copy()
+    # test_2_list.append(CvPy(cropped_5, False, True))
+    # cropped_6 = image[2222:2837, 3338:3737].copy()
+    # test_2_list.append(CvPy(cropped_6, True, False))
 
+
+    test_dict ={ }
 
     test_dict['test_1'] = test_1_list
 
