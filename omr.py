@@ -9,7 +9,7 @@ CORNER_FEATS = (
     # 0.19188334690998524,
     # 1.1514327482234812,
     # 0.998754685666376,
-    200,
+    100,
     100,
     50,
     100,
@@ -21,7 +21,7 @@ TRANSF_SIZE = 1024
 def normalize(im):
     return cv2.normalize(im, np.zeros(im.shape), 0, 255, norm_type=cv2.NORM_MINMAX)
 
-def get_approx_contour(contour, tol=.0001):     #.0001):
+def get_approx_contour(contour, tol=.01):     #.0001):
     """Get rid of 'useless' points in the contour"""
     epsilon = tol * cv2.arcLength(contour, True)
     return cv2.approxPolyDP(contour, epsilon, True)
@@ -166,7 +166,7 @@ def get_marked_alternative(alternative_patches):
     return np.argmin(means)
 
 def get_letter(alt_index):
-    return ["A", "B", "C", "D", "E"][alt_index] if alt_index is not None else "N/A"
+    return ["A", "B", "C", "D", "F", "G", "H", "J"][alt_index] if alt_index is not None else "N/A"
 
 def get_answers(source_file):
     """Run the full pipeline:
@@ -188,7 +188,8 @@ def get_answers(source_file):
 
     # crop the image using array slices -- it's a NumPy array
     # after all!
-    cropped_1 = image[1245:2121, 502:3832].copy()
+    # cropped_1 = image[1245:2121, 502:3832].copy()
+    cropped_1 = image[1278:2082, 599:1006].copy()
     cv2.imshow("cropped", cropped_1)
 
 
@@ -207,7 +208,7 @@ def get_answers(source_file):
 
     outmost = order_points(get_outmost_points(corners))
 
-    transf = perspective_transform(cropped_1, outmost)
+    transf = perspective_transform(im, outmost)
 
     answers = []
     for i, q_patch in enumerate(get_question_patches(transf)):

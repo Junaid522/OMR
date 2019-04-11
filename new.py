@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
 
-# % matplotlib notebook
+# %matplotlib notebook
 
 # img = cv2.imread('img/scan_score.jpg')
 
@@ -22,6 +22,7 @@ cropped_1 = image[2702:2757, 517:1006].copy()
 # cv2.imshow("cropped", cropped_1)
 
 edges = cv2.Canny(cropped_1, 100, 200)
+
 
 blurred = cv2.GaussianBlur(cropped_1, (11, 11), 10)
 

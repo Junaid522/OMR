@@ -1,9 +1,5 @@
 # import the necessary packages
-from imutils.perspective import four_point_transform
-from imutils import contours
 import numpy as np
-import argparse
-import imutils
 import cv2
 
 #
@@ -36,99 +32,100 @@ def normalize(im):
 # load the image and show it
 image = cv2.imread("img/scan_score.jpg")
 
-cropped_1 = image[1278:2082, 599:1006].copy()
-cv2.imshow("cropped", cropped_1)
+cropped_1 = image[1292:2072, 599:1006].copy()
+crop_1 = True
+cropped_2 = image[1292:2072, 1147:1549].copy()
 
-edges = cv2.Canny(cropped_1, 100, 200)
+cropped_3 = image[1303:1363, 599:1006]
+crop_2 = False
+# cv2.imshow("cropped", cropped_1)
+
+edges = cv2.Canny(cropped_2, 100, 200)
 
 blurred = cv2.GaussianBlur(cropped_1, (11, 11), 10)
-
+# crop_1 = True
 im = normalize(cv2.cvtColor(blurred, cv2.COLOR_BGR2GRAY))
 
-ret, im = cv2.threshold(im, 155, 255, cv2.THRESH_BINARY)
+ret, im = cv2.threshold(im, 150, 255, cv2.THRESH_BINARY)
 
 thresh = cv2.threshold(im, 0, 255,cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
 
-cnts = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+# thresh = cv2.bitwise_not(thresh)
+
+output = cv2.connectedComponentsWithStats(thresh, 4, cv2.CV_32S)
+
+stats = output[2]
+labels = output[1]
+
+answers = []
+counts = []
+count = 0
+
+for i in stats:
+    cv2.putText(cropped_1, str(count), (i[0], i[1] + i[3]), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 2, 255)
+
+    if i[4]>=2550 and i[4]<= 2900:
+        answers.append(i)
+
+        counts.append(count)
+        count += 1
+    else:
+        count += 1
+
+print(counts)
+
+# for a in answers:
+#     print(a)
+
+a = []
+for i in range(len(answers)):
+    if crop_1:
+        if i % 2 == 0:
+            if answers[i][0]>=235 and answers[i][0]<= 240:
+                a.append('D')
+            elif answers[i][0]>=3 and answers[i][0]<= 6:
+                a.append('A')
+            elif answers[i][0]>=80 and answers[i][0]<= 84:
+                a.append('B')
+            elif answers[i][0]>=159 and answers[i][0]<= 165:
+                a.append('C')
+        else:
+            if answers[i][0]>=235 and answers[i][0]<= 240:
+                a.append('J')
+            elif answers[i][0]>=3 and answers[i][0]<= 6:
+                a.append('F')
+            elif answers[i][0]>=80 and answers[i][0]<= 84:
+                a.append('G')
+            elif answers[i][0]>=159 and answers[i][0]<= 165:
+                a.append('H')
+    elif crop_2:
+        if i % 2 == 0:
+            if answers[i][0]>=235 and answers[i][0]<= 240:
+                a.append('J')
+            elif answers[i][0]>=3 and answers[i][0]<= 6:
+                a.append('F')
+            elif answers[i][0]>=80 and answers[i][0]<= 84:
+                a.append('G')
+            elif answers[i][0]>=159 and answers[i][0]<= 165:
+                a.append(('H'))
+        else:
+            if answers[i][0]>=235 and answers[i][0]<= 240:
+                a.append('D')
+            elif answers[i][0]>=3 and answers[i][0]<= 6:
+                a.append('A')
+            elif answers[i][0]>=80 and answers[i][0]<= 84:
+                a.append('B')
+            elif answers[i][0]>=159 and answers[i][0]<= 165:
+                a.append('C')
+
+print(a)
 
 
-cnts = imutils.grab_contours(cnts)
+# print(len(answers))
 
-# print(cnts)
-cv2.imshow('thresh', thresh)
-questionCnts = []
+cv2.imshow("original", cropped_1)
+# cv2.imshow("img", im)
+cv2.imshow("th", thresh)
 
-for c in cnts:
-
-    # ellipse = cv2.fitEllipse(c)
-    # print(cv2.ellipse(thresh, ellipse, (0, 0,255), 2))
-    # (x,y),radius = cv2.minEnclosingCircle(c)
-    # center = (int(x), int(y))
-    # radius = int(radius)
-    # points.append(cv2.circle(cropped_1, center,radius,(0,255,0),2))
-    # rect = cv2.minAreaRect(c)
-    # box = cv2.boxPoints(rect)
-    # box = np.int0(box)
-    # points.append(cv2.drawContours(cropped_1, [box],0,(0,0,255),2))
-
-    # perimeter.append(cv2.arcLength(c, True))
-    perimeter = cv2.arcLength(c, True)
-    # print(perimeter)
-
-    ar = cv2.contourArea(c)
-    cv2.drawContours(thresh, c, -1,(255,0,0),3)
-    if perimeter>=70 and perimeter<= 71:
-        questionCnts.append(c)
-    # if h >= 42 or h <= 44 and w>=56 or w <= 59 and ar>=1.4 and ar<=1.5:
-    #     questionCnts.append(c)
-
-# print(points)
-# print(len(perimeter))
-# print(len(cnts))
-print(len(questionCnts))
-
-# print(len(perimeter))
-# print(perimeter)
-
-questionCnts = contours.sort_contours(questionCnts, method="top-to-bottom")[0]
-# print(questionCnts)
-
-# print(cv2.moments(questionCnts[0]))
-correct = 0
-#
-for (q,i) in enumerate(np.arange(0, len(questionCnts), 4)):
-    cnts = contours.sort_contours(questionCnts[i:i + 4])[0]
-    bubbled = None
-    # print(cnts)
-
-    for (j, c) in enumerate(cnts):
-        mask = np.zeros(thresh.shape, dtype="uint8")
-        # print(mask)
-        cv2.drawContours(mask, [c], -1, (255,0,0), 1)
-
-        mask = cv2.bitwise_and(thresh, thresh, mask=mask)
-        total = cv2.countNonZero(mask)
-
-        if bubbled is None or total > bubbled[0]:
-            bubbled = (total, j)
-
-        color = (0, 0, 255)
-        k = 0
-
-        if k == bubbled[1]:
-            color = (0, 255, 0)
-            correct += 1
-            print("correct", int(j))
-
-            cv2.drawContours(thresh, [cnts[k]], -1, color, 3)
-        # cv2.imshow("t", thresh)
-
-#
-# # grab the test taker
-score = (correct / 13.0) * 100
-print("[INFO] score: {:.2f}%".format(score))
-cv2.putText(im, "{:.2f}%".format(score), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
-# # cv2.imshow("Original", image)
-# cv2.imshow("Exam", im)
 
 cv2.waitKey(0)
