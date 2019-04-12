@@ -7,16 +7,12 @@ import imutils
 import cv2
 
 # construct the argument parse and parse the arguments
-ap = argparse.ArgumentParser()
-ap.add_argument("-i", "--image", required=True,
-                help="/home/junaid/PycharmProjects/omr/img/q_sheet.JPEG", type=str)
-args = vars(ap.parse_args())
 
 # define the answer key which maps the question number
 # to the correct answer
 ANSWER_KEY = {0: 1, 1: 4, 2: 0, 3: 3, 4: 1}
 
-image = cv2.imread(args["image"])
+image = cv2.imread('img/scan_score.jpg')
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 blurred = cv2.GaussianBlur(gray, (5, 5), 0)
 edged = cv2.Canny(blurred, 75, 200)
