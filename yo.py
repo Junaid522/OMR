@@ -1,4 +1,6 @@
 # import the necessary packages
+from time import sleep
+
 import numpy as np
 import cv2
 
@@ -17,7 +19,7 @@ def normalize(im):
     return cv2.normalize(im, np.zeros(im.shape), 0, 255, norm_type=cv2.NORM_MINMAX)
 
 def CvPy_2(image, even, odd, thresh_value, lower_bound):
-    edges = cv2.Canny(image, 100, 200)
+    # edges = cv2.Canny(image, 100, 200)
 
     blurred = cv2.GaussianBlur(image, (11, 11), 10)
     # crop_1 = True
@@ -152,7 +154,7 @@ def CvPy_2(image, even, odd, thresh_value, lower_bound):
     return a
 
 def CvPy(image, even, odd, thresh_value, lower_bound):
-    edges = cv2.Canny(image, 100, 200)
+    # edges = cv2.Canny(image, 100, 200)
 
     blurred = cv2.GaussianBlur(image, (11, 11), 10)
     # crop_1 = True
@@ -212,10 +214,10 @@ def CvPy(image, even, odd, thresh_value, lower_bound):
     # print(len(comp))
     # print(comp)
     # print(answers)
-    # cv2.imshow("original", image)
+    cv2.imshow("original", image)
     # # # cv2.imshow("img", im)
-    # cv2.imshow("th", thresh)
-    # cv2.waitKey(0)
+    cv2.imshow("th", thresh)
+    cv2.waitKey(0)
 
     # for a in answers:
     #     print(a)
@@ -280,6 +282,7 @@ def main():
 
     # load the image and show it
     image = cv2.imread("img/scan_score.jpg")
+    sleep(5)
 
     # Test 1
     cropped_1 = image[1292:2072, 599:1006].copy() # ok
@@ -336,8 +339,8 @@ def main():
     test_4_list.append(CvPy(cropped_5, False, True, 140, 2350)) # ok
     cropped_6 = image[3558:3984, 3338:3737].copy() # ok
     test_4_list.append(CvPy(cropped_6, True, False, 140, 2350)) # ok
-
-
+    #
+    #
     test_dict ={ }
 
     test_dict['test_1'] = test_1_list
