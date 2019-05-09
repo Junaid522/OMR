@@ -1,22 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="27f95225-1fd9-46ee-83a3-2c1c9a5f1858" name="Default Changelist" comment="Default Changelist">
-      <change afterPath="$PROJECT_DIR$/Scanned.JPG" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/im-to-txt.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/121212.JPEG" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/Print_Payment_Receipt.JPG" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/img/Scanned.JPG" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scan_doc/IMG_0407.JPG" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scan_doc/IMG_0410.JPG" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scan_doc/IMG_0411.JPG" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scan_doc/IMG_0412.JPG" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scan_doc/Print_Payment_Receipt.JPG" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scan_doc/scan.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scan_doc/scanner.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yo.py" beforeDir="false" afterPath="$PROJECT_DIR$/yo.py" afterDir="false" />
-    </list>
+    <list default="true" id="27f95225-1fd9-46ee-83a3-2c1c9a5f1858" name="Default Changelist" comment="Default Changelist" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -418,7 +403,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="61" y="25" width="1859" height="1055" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.119139545" />
       <window_info id="Structure" order="1" weight="0.25" />
